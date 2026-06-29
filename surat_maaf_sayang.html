@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Untuk Sayangku</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Nunito:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #ffe4e8 0%, #ffd6e0 30%, #ffb3c6 60%, #ff85a1 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === HERO SECTION === */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 2rem;
+  }
+
+  /* Floating hearts background */
+  .heart-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .heart-float {
+    position: absolute;
+    font-size: 1.5rem;
+    animation: floatUp linear infinite;
+    opacity: 0.3;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0.3; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* === GIFT BOX === */
+  #gift-container {
+    position: relative;
+    z-index: 10;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .gift-box {
+    width: 180px;
+    height: 160px;
+    position: relative;
+    transition: transform 0.2s;
+  }
+
+  .gift-box:hover { transform: scale(1.05); }
+  .gift-box:active { transform: scale(0.97); }
+
+  /* Box body */
+  .box-body {
+    position: absolute;
+    bottom: 0;
+    width: 180px;
+    height: 110px;
+    background: linear-gradient(135deg, #ff4d7d, #ff1f5e);
+    border-radius: 8px;
+    box-shadow: 4px 6px 0px #c0003c;
+  }
+
+  .box-body::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 24px; height: 100%;
+    background: rgba(255,255,255,0.25);
+  }
+
+  /* Box lid */
+  .box-lid {
+    position: absolute;
+    top: 30px;
+    width: 180px;
+    height: 40px;
+    background: linear-gradient(135deg, #ff6b96, #ff2d6b);
+    border-radius: 6px;
+    box-shadow: 4px 4px 0px #c0003c;
+    z-index: 2;
+    transition: transform 0.6s cubic-bezier(.23,1.5,.42,.9), opacity 0.5s;
+  }
+
+  .box-lid::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 24px; height: 100%;
+    background: rgba(255,255,255,0.25);
+  }
+
+  /* Ribbon on lid */
+  .ribbon-h {
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 12px;
+    background: linear-gradient(135deg, #ffd700, #ffb300);
+    transform: translateY(-50%);
+  }
+
+  .ribbon-v {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 12px;
+    background: linear-gradient(135deg, #ffd700, #ffb300);
+    transform: translateX(-50%);
+  }
+
+  /* Bow */
+  .bow {
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 40px;
+    z-index: 3;
+    transition: transform 0.6s cubic-bezier(.23,1.5,.42,.9), opacity 0.5s;
+  }
+
+  .bow-left, .bow-right {
+    position: absolute;
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #ffd700, #ffb300);
+    border-radius: 50% 50% 0 50%;
+    top: 0;
+  }
+
+  .bow-left {
+    left: 0;
+    transform: rotate(-45deg);
+  }
+
+  .bow-right {
+    right: 0;
+    transform: rotate(45deg) scaleX(-1);
+  }
+
+  .bow-center {
+    position: absolute;
+    width: 14px; height: 14px;
+    background: #ffc107;
+    border-radius: 50%;
+    top: 6px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+  }
+
+  /* Shine on box */
+  .box-shine {
+    position: absolute;
+    top: 8px; left: 10px;
+    width: 30px; height: 12px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    transform: rotate(-20deg);
+  }
+
+  /* Click hint */
+  .click-hint {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #c0003c;
+    font-weight: 700;
+    animation: pulse 1.5s ease-in-out infinite;
+    letter-spacing: 0.05em;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.97); }
+  }
+
+  /* === OPENED ANIMATION === */
+  .lid-open { transform: translateY(-80px) rotate(-20deg) !important; opacity: 0 !important; }
+  .bow-open { transform: translateX(-50%) translateY(-80px) scale(0) !important; opacity: 0 !important; }
+
+  /* Hearts burst */
+  .burst-heart {
+    position: absolute;
+    font-size: 2rem;
+    animation: burstOut 1.2s ease-out forwards;
+    pointer-events: none;
+    z-index: 20;
+  }
+
+  @keyframes burstOut {
+    0% { transform: translate(0,0) scale(0); opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: var(--tx) scale(1.5); opacity: 0; }
+  }
+
+  /* === MAIN MESSAGE REVEAL === */
+  #message-section {
+    display: none;
+    z-index: 10;
+    position: relative;
+    text-align: center;
+    animation: fadeSlideIn 0.8s ease-out;
+  }
+
+  @keyframes fadeSlideIn {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  #message-section h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    color: #c0003c;
+    text-shadow: 2px 2px 0px rgba(255,255,255,0.5), 0 0 30px rgba(192,0,60,0.3);
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+  }
+
+  .scroll-hint {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: #c0003c;
+    font-weight: 600;
+    opacity: 0.8;
+    animation: bounceDown 1.5s ease-in-out infinite;
+  }
+
+  @keyframes bounceDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  /* === CARD SECTION === */
+  #card-section {
+    padding: 3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .love-card {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    max-width: 640px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(192,0,60,0.15), 0 2px 8px rgba(192,0,60,0.08);
+    border: 1.5px solid rgba(255,100,130,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .love-card::before {
+    content: '💌';
+    position: absolute;
+    top: -10px; right: -10px;
+    font-size: 5rem;
+    opacity: 0.06;
+    transform: rotate(15deg);
+  }
+
+  .love-card p {
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    color: #7a0030;
+    line-height: 1.9;
+    font-weight: 600;
+  }
+
+  .love-card p span.highlight {
+    color: #e0005a;
+    font-weight: 700;
+  }
+
+  .love-card p span.big {
+    display: block;
+    font-size: 1.3em;
+    margin-top: 1rem;
+    color: #c0003c;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  /* === PHOTO GRID === */
+  .photo-grid-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    color: #c0003c;
+    text-align: center;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+  }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 640px;
+    width: 100%;
+  }
+
+  .photo-slot {
+    aspect-ratio: 1;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.7);
+    border: 2px dashed rgba(255,100,130,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(192,0,60,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .photo-slot:hover { transform: scale(1.03); box-shadow: 0 8px 24px rgba(192,0,60,0.2); }
+
+  .photo-slot img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+    display: none;
+  }
+
+  .photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .photo-placeholder .icon { font-size: 2.5rem; }
+
+  .photo-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(192,0,60,0.7), transparent);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.75rem 0.5rem 0.5rem;
+    text-align: center;
+    border-radius: 0 0 18px 18px;
+    display: none;
+  }
+
+  .upload-btn {
+    background: linear-gradient(135deg, #ff4d7d, #ff1f5e);
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    margin-top: 4px;
+    transition: transform 0.2s;
+  }
+
+  .upload-btn:hover { transform: scale(1.05); }
+
+  .upload-input { display: none; }
+
+  /* === VIDEO SECTION === */
+  .video-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    color: #c0003c;
+    text-align: center;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+  }
+
+  .video-wrapper {
+    max-width: 640px;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(192,0,60,0.2);
+    background: rgba(255,255,255,0.85);
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 2px dashed rgba(255,100,130,0.4);
+  }
+
+  .video-wrapper video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: none;
+    border-radius: 18px;
+  }
+
+  .video-placeholder {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .video-placeholder .icon { font-size: 3.5rem; margin-bottom: 1rem; }
+
+  .upload-btn-large {
+    background: linear-gradient(135deg, #ff4d7d, #ff1f5e);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    margin-top: 0.5rem;
+    display: inline-block;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(192,0,60,0.3);
+  }
+
+  .upload-btn-large:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(192,0,60,0.4); }
+
+  /* === FOOTER === */
+  .love-footer {
+    text-align: center;
+    padding: 2rem 1rem 3rem;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.8rem;
+    color: #c0003c;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+  }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Placeholder text */
+  .ph-text {
+    font-size: 0.78rem;
+    color: #c0003c;
+    font-weight: 600;
+    opacity: 0.7;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating hearts background -->
+<div class="heart-bg" id="heartBg"></div>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div id="gift-container">
+    <div class="gift-box" id="giftBox">
+      <!-- Bow -->
+      <div class="bow" id="bow">
+        <div class="bow-left"></div>
+        <div class="bow-right"></div>
+        <div class="bow-center"></div>
+      </div>
+      <!-- Lid -->
+      <div class="box-lid" id="boxLid">
+        <div class="ribbon-h"></div>
+        <div class="ribbon-v"></div>
+        <div class="box-shine"></div>
+      </div>
+      <!-- Body -->
+      <div class="box-body">
+        <div class="ribbon-h" style="top:50%;transform:translateY(-50%)"></div>
+        <div class="ribbon-v" style="left:50%;transform:translateX(-50%)"></div>
+        <div class="box-shine"></div>
+      </div>
+    </div>
+    <p class="click-hint">✨ Klik kado ini! ✨</p>
+  </div>
+
+  <!-- Hidden message, shown after click -->
+  <div id="message-section">
+    <h1 id="mainHeading">Maafin aku ya,<br>sayangku cintakuu 💕</h1>
+    <p class="scroll-hint">Scroll ke bawah ya sayang ↓</p>
+  </div>
+</section>
+
+<!-- ===== CARD SECTION ===== -->
+<section id="card-section">
+
+  <div class="love-card">
+    <p>
+      haaiii <span class="highlight">sayangkuuu</span> aku mintaa maaf bangettt yhh sama kamuuu 🥺<br><br>
+      maaf karena aku sudah membuat kamu <span class="highlight">overthinking</span> dan aku yakin kamu menyalahkan dirimu karena aku seperti kemarin. tapi intinya aku ga <span class="highlight">capeee sama sekaliii</span> buat kamuu sayanggg 💗<br><br>
+      aku disini <span class="highlight">masiiii sayanggg bangetttt</span> samaa kamuuu. dari awall kita ketemuuu kamu udaa menjadiiii oranggg yang akann aku usahaakann dan membuat <span class="highlight">keluarga yang bahagiaaa</span> samaa kamuuu 🏠💕
+      <span class="big">
+        AKU MINTAA MAAF YAAA SAYANGGGG, ❤️<br>
+        AKU MINTAA MAAFFF<br>
+        SEDALAM-DALAMNYA<br><br>
+        LOVES YOUUU MOREEE ❤️❤️❤️
+      </span>
+    </p>
+  </div>
+
+  <!-- Photo Grid -->
+  <p class="photo-grid-title">📸 Momen kita berdua 📸</p>
+
+  <div class="photo-grid">
+    <!-- Slot 1 -->
+    <div class="photo-slot" id="slot1">
+      <img id="img1" alt="Foto 1">
+      <div class="photo-label" id="label1">Foto 1 💕</div>
+      <div class="photo-placeholder" id="ph1">
+        <div class="icon">🌸</div>
+        <button class="upload-btn" onclick="document.getElementById('input1').click()">+ Tambah Foto</button>
+        <p class="ph-text">Foto kita</p>
+      </div>
+      <input type="file" accept="image/*" class="upload-input" id="input1" onchange="loadPhoto(this,'img1','ph1','label1')">
+    </div>
+    <!-- Slot 2 -->
+    <div class="photo-slot" id="slot2">
+      <img id="img2" alt="Foto 2">
+      <div class="photo-label" id="label2">Foto 2 💕</div>
+      <div class="photo-placeholder" id="ph2">
+        <div class="icon">💖</div>
+        <button class="upload-btn" onclick="document.getElementById('input2').click()">+ Tambah Foto</button>
+        <p class="ph-text">Foto kita</p>
+      </div>
+      <input type="file" accept="image/*" class="upload-input" id="input2" onchange="loadPhoto(this,'img2','ph2','label2')">
+    </div>
+    <!-- Slot 3 -->
+    <div class="photo-slot" id="slot3">
+      <img id="img3" alt="Foto 3">
+      <div class="photo-label" id="label3">Foto 3 💕</div>
+      <div class="photo-placeholder" id="ph3">
+        <div class="icon">🥰</div>
+        <button class="upload-btn" onclick="document.getElementById('input3').click()">+ Tambah Foto</button>
+        <p class="ph-text">Foto kita</p>
+      </div>
+      <input type="file" accept="image/*" class="upload-input" id="input3" onchange="loadPhoto(this,'img3','ph3','label3')">
+    </div>
+    <!-- Slot 4 -->
+    <div class="photo-slot" id="slot4">
+      <img id="img4" alt="Foto 4">
+      <div class="photo-label" id="label4">Foto 4 💕</div>
+      <div class="photo-placeholder" id="ph4">
+        <div class="icon">✨</div>
+        <button class="upload-btn" onclick="document.getElementById('input4').click()">+ Tambah Foto</button>
+        <p class="ph-text">Foto kita</p>
+      </div>
+      <input type="file" accept="image/*" class="upload-input" id="input4" onchange="loadPhoto(this,'img4','ph4','label4')">
+    </div>
+  </div>
+
+  <!-- Video Section -->
+  <p class="video-title">🎬 Video spesial buat kamu 🎬</p>
+
+  <div class="video-wrapper" id="videoWrapper">
+    <video id="mainVideo" controls></video>
+    <div class="video-placeholder" id="videoPh">
+      <div class="icon">🎥</div>
+      <p style="color:#c0003c;font-weight:700;font-size:1rem;">Upload video spesial kita</p>
+      <button class="upload-btn-large" onclick="document.getElementById('videoInput').click()">🎬 Pilih Video</button>
+    </div>
+    <input type="file" accept="video/*" class="upload-input" id="videoInput" onchange="loadVideo(this)">
+  </div>
+
+  <p class="love-footer">With all my heart ❤️<br>always & forever 💫</p>
+
+</section>
+
+<script>
+  // === Floating hearts background ===
+  const heartBg = document.getElementById('heartBg');
+  const heartEmojis = ['❤️','💕','💗','💖','💝','🌸','✨'];
+  for (let i = 0; i < 18; i++) {
+    const h = document.createElement('div');
+    h.className = 'heart-float';
+    h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.animationDuration = (6 + Math.random() * 8) + 's';
+    h.style.animationDelay = (Math.random() * 8) + 's';
+    h.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+    heartBg.appendChild(h);
+  }
+
+  // === Gift click handler ===
+  let opened = false;
+  document.getElementById('giftBox').addEventListener('click', openGift);
+  document.querySelector('.click-hint').addEventListener('click', openGift);
+
+  function openGift() {
+    if (opened) return;
+    opened = true;
+
+    // Animate lid & bow open
+    document.getElementById('boxLid').classList.add('lid-open');
+    document.getElementById('bow').classList.add('bow-open');
+
+    // Burst hearts
+    const container = document.getElementById('gift-container');
+    const rect = container.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    const burstEmojis = ['❤️','💕','💖','💗','✨','🌸','💝'];
+    for (let i = 0; i < 12; i++) {
+      const h = document.createElement('div');
+      h.className = 'burst-heart';
+      h.textContent = burstEmojis[Math.floor(Math.random() * burstEmojis.length)];
+      const angle = (i / 12) * Math.PI * 2;
+      const dist = 80 + Math.random() * 80;
+      const tx = `translate(${Math.cos(angle)*dist + cx - 20}px, ${Math.sin(angle)*dist + cy - 60}px)`;
+      h.style.setProperty('--tx', tx);
+      h.style.left = cx - 20 + 'px';
+      h.style.top = cy - 60 + 'px';
+      h.style.animationDelay = (Math.random() * 0.3) + 's';
+      h.style.animationDuration = (0.8 + Math.random() * 0.5) + 's';
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 2000);
+    }
+
+    // Confetti
+    launchConfetti();
+
+    // Show message after short delay
+    setTimeout(() => {
+      document.getElementById('gift-container').style.opacity = '0';
+      document.getElementById('gift-container').style.transform = 'scale(0.8)';
+      document.getElementById('gift-container').style.transition = 'all 0.5s ease';
+
+      setTimeout(() => {
+        document.getElementById('gift-container').style.display = 'none';
+        const msg = document.getElementById('message-section');
+        msg.style.display = 'block';
+      }, 500);
+    }, 800);
+  }
+
+  function launchConfetti() {
+    const colors = ['#ff4d7d','#ff85a1','#ffd700','#ff1f5e','#ffb3c6','#fff'];
+    for (let i = 0; i < 60; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'confetti-piece';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.top = '-20px';
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.width = (6 + Math.random() * 8) + 'px';
+        c.style.height = (6 + Math.random() * 8) + 'px';
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        c.style.animationDuration = (2 + Math.random() * 2) + 's';
+        c.style.animationDelay = '0s';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 4000);
+      }, i * 40);
+    }
+  }
+
+  // === Photo upload ===
+  function loadPhoto(input, imgId, phId, labelId) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById(imgId);
+      img.src = e.target.result;
+      img.style.display = 'block';
+      document.getElementById(phId).style.display = 'none';
+      document.getElementById(labelId).style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  // === Video upload ===
+  function loadVideo(input) {
+    if (!input.files || !input.files[0]) return;
+    const url = URL.createObjectURL(input.files[0]);
+    const vid = document.getElementById('mainVideo');
+    vid.src = url;
+    vid.style.display = 'block';
+    document.getElementById('videoPh').style.display = 'none';
+    document.getElementById('videoWrapper').style.border = 'none';
+  }
+</script>
+</body>
+</html>

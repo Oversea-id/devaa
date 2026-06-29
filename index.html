@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Untuk Sayangku</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Nunito:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #ffe4e8 0%, #ffd6e0 30%, #ffb3c6 60%, #ff85a1 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 2rem;
+  }
+
+  .heart-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .heart-float {
+    position: absolute;
+    animation: floatUp linear infinite;
+    opacity: 0.3;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0.3; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  }
+
+  #gift-container {
+    position: relative;
+    z-index: 10;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .gift-box {
+    width: 180px;
+    height: 160px;
+    position: relative;
+    transition: transform 0.2s;
+  }
+
+  .gift-box:hover { transform: scale(1.05); }
+  .gift-box:active { transform: scale(0.97); }
+
+  .box-body {
+    position: absolute;
+    bottom: 0;
+    width: 180px;
+    height: 110px;
+    background: linear-gradient(135deg, #ff4d7d, #ff1f5e);
+    border-radius: 8px;
+    box-shadow: 4px 6px 0px #c0003c;
+  }
+
+  .box-body::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 24px; height: 100%;
+    background: rgba(255,255,255,0.25);
+  }
+
+  .box-lid {
+    position: absolute;
+    top: 30px;
+    width: 180px;
+    height: 40px;
+    background: linear-gradient(135deg, #ff6b96, #ff2d6b);
+    border-radius: 6px;
+    box-shadow: 4px 4px 0px #c0003c;
+    z-index: 2;
+    transition: transform 0.6s cubic-bezier(.23,1.5,.42,.9), opacity 0.5s;
+  }
+
+  .box-lid::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 24px; height: 100%;
+    background: rgba(255,255,255,0.25);
+  }
+
+  .ribbon-h {
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 12px;
+    background: linear-gradient(135deg, #ffd700, #ffb300);
+    transform: translateY(-50%);
+  }
+
+  .ribbon-v {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 12px;
+    background: linear-gradient(135deg, #ffd700, #ffb300);
+    transform: translateX(-50%);
+  }
+
+  .bow {
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 40px;
+    z-index: 3;
+    transition: transform 0.6s cubic-bezier(.23,1.5,.42,.9), opacity 0.5s;
+  }
+
+  .bow-left, .bow-right {
+    position: absolute;
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #ffd700, #ffb300);
+    border-radius: 50% 50% 0 50%;
+    top: 0;
+  }
+
+  .bow-left { left: 0; transform: rotate(-45deg); }
+  .bow-right { right: 0; transform: rotate(45deg) scaleX(-1); }
+
+  .bow-center {
+    position: absolute;
+    width: 14px; height: 14px;
+    background: #ffc107;
+    border-radius: 50%;
+    top: 6px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+  }
+
+  .box-shine {
+    position: absolute;
+    top: 8px; left: 10px;
+    width: 30px; height: 12px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    transform: rotate(-20deg);
+  }
+
+  .click-hint {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #c0003c;
+    font-weight: 700;
+    animation: pulse 1.5s ease-in-out infinite;
+    letter-spacing: 0.05em;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.97); }
+  }
+
+  .lid-open { transform: translateY(-80px) rotate(-20deg) !important; opacity: 0 !important; }
+  .bow-open { transform: translateX(-50%) translateY(-80px) scale(0) !important; opacity: 0 !important; }
+
+  .burst-heart {
+    position: fixed;
+    font-size: 2rem;
+    animation: burstOut 1.2s ease-out forwards;
+    pointer-events: none;
+    z-index: 200;
+  }
+
+  @keyframes burstOut {
+    0% { transform: translate(0,0) scale(0); opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: var(--tx) var(--ty) scale(1.5); opacity: 0; }
+  }
+
+  #message-section {
+    display: none;
+    z-index: 10;
+    position: relative;
+    text-align: center;
+    animation: fadeSlideIn 0.8s ease-out;
+  }
+
+  @keyframes fadeSlideIn {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  #message-section h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    color: #c0003c;
+    text-shadow: 2px 2px 0px rgba(255,255,255,0.5), 0 0 30px rgba(192,0,60,0.3);
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+  }
+
+  .scroll-hint {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: #c0003c;
+    font-weight: 600;
+    opacity: 0.8;
+    animation: bounceDown 1.5s ease-in-out infinite;
+  }
+
+  @keyframes bounceDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  #card-section {
+    padding: 3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .love-card {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    max-width: 640px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(192,0,60,0.15), 0 2px 8px rgba(192,0,60,0.08);
+    border: 1.5px solid rgba(255,100,130,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .love-card::before {
+    content: '💌';
+    position: absolute;
+    top: -10px; right: -10px;
+    font-size: 5rem;
+    opacity: 0.06;
+    transform: rotate(15deg);
+  }
+
+  .love-card p {
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    color: #7a0030;
+    line-height: 1.9;
+    font-weight: 600;
+  }
+
+  .love-card p span.highlight { color: #e0005a; font-weight: 700; }
+
+  .love-card p span.big {
+    display: block;
+    font-size: 1.3em;
+    margin-top: 1rem;
+    color: #c0003c;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .section-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    color: #c0003c;
+    text-align: center;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+  }
+
+  /* Photo Grid */
+  .photo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 640px;
+    width: 100%;
+  }
+
+  .photo-slot {
+    aspect-ratio: 1;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(192,0,60,0.15);
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: rgba(255,255,255,0.6);
+  }
+
+  .photo-slot:hover { transform: scale(1.03); box-shadow: 0 8px 24px rgba(192,0,60,0.25); }
+
+  .photo-slot img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(192,0,60,0.65), transparent);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 1rem 0.75rem 0.6rem;
+    text-align: center;
+  }
+
+  /* Placeholder for empty slots */
+  .photo-empty {
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed rgba(255,100,130,0.45);
+    border-radius: 20px;
+    color: #c0003c;
+    font-size: 0.8rem;
+    font-weight: 700;
+    gap: 6px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .photo-empty .ico { font-size: 2.5rem; }
+
+  /* Video */
+  .video-wrapper {
+    max-width: 640px;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(192,0,60,0.2);
+    background: #000;
+    aspect-ratio: 16/9;
+  }
+
+  .video-wrapper video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 20px;
+  }
+
+  .video-empty {
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed rgba(255,100,130,0.45);
+    border-radius: 20px;
+    color: #c0003c;
+    font-size: 0.95rem;
+    font-weight: 700;
+    gap: 8px;
+    background: rgba(255,255,255,0.7);
+  }
+
+  .video-empty .ico { font-size: 3rem; }
+
+  .love-footer {
+    text-align: center;
+    padding: 2rem 1rem 3rem;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.8rem;
+    color: #c0003c;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+  }
+
+  .confetti-piece {
+    position: fixed;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="heart-bg" id="heartBg"></div>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div id="gift-container">
+    <div class="gift-box" id="giftBox">
+      <div class="bow" id="bow">
+        <div class="bow-left"></div>
+        <div class="bow-right"></div>
+        <div class="bow-center"></div>
+      </div>
+      <div class="box-lid" id="boxLid">
+        <div class="ribbon-h"></div>
+        <div class="ribbon-v"></div>
+        <div class="box-shine"></div>
+      </div>
+      <div class="box-body">
+        <div class="ribbon-h" style="top:50%;transform:translateY(-50%)"></div>
+        <div class="ribbon-v" style="left:50%;transform:translateX(-50%)"></div>
+        <div class="box-shine"></div>
+      </div>
+    </div>
+    <p class="click-hint">✨ Klik kado ini! ✨</p>
+  </div>
+
+  <div id="message-section">
+    <h1>Maafin aku ya,<br>sayangku cintakuu 💕</h1>
+    <p class="scroll-hint">Scroll ke bawah ya sayang ↓</p>
+  </div>
+</section>
+
+<!-- ===== CARD + KONTEN ===== -->
+<section id="card-section">
+
+  <div class="love-card">
+    <p>
+      haaiii <span class="highlight">sayangkuuu</span> aku mintaa maaf bangettt yhh sama kamuuu 🥺<br><br>
+      maaf karena aku sudah membuat kamu <span class="highlight">overthinking</span> dan aku yakin kamu menyalahkan dirimu karena aku seperti kemarin. tapi intinya aku ga <span class="highlight">capeee sama sekaliii</span> buat kamuu sayanggg 💗<br><br>
+      aku disini <span class="highlight">masiiii sayanggg bangetttt</span> samaa kamuuu. dari awall kita ketemuuu kamu udaa menjadiiii oranggg yang akann aku usahaakann dan membuat <span class="highlight">keluarga yang bahagiaaa</span> samaa kamuuu 🏠💕
+      <span class="big">
+        AKU MINTAA MAAF YAAA SAYANGGGG ❤️<br>
+        AKU MINTAA MAAFFF<br>
+        SEDALAM-DALAMNYA<br><br>
+        LOVES YOUUU MOREEE ❤️❤️❤️
+      </span>
+    </p>
+  </div>
+
+  <div class="w-full max-w-sm overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur-xl">
+
+    <img
+        src="./WhatsApp Image 2026-06-29 at 07.29.35.jpeg"
+        alt="Album Cover"
+        class="aspect-square w-full object-cover"
+    >
+
+    <div class="space-y-5 p-6">
+
+        <div class="space-y-1">
+            <h1 class="truncate text-2xl font-bold text-white">
+                Cinta Luar Biasa
+            </h1>
+
+            <p class="truncate text-sm text-slate-400">
+              Andmesh            </p>
+        </div>
+
+        <audio
+            controls
+            class="block w-full cursor-pointer rounded-lg accent-indigo-500"
+        >
+            <source src="./WhatsApp Audio 2026-06-29 at 07.32.14.aac" type="audio/mpeg">
+            Your browser does not support audio.
+        </audio>
+
+    </div>
+
+</div>
+
+  <!-- ===== FOTO GRID ===== -->
+  <p class="section-title">📸 Momen kita berdua 📸</p>
+
+  <div class="photo-grid">
+
+    <!-- Ganti src="" dengan link foto kamu -->
+    <div class="photo-slot">
+      <img src="./027885ed-b361-457f-8677-f02077567562.jpeg" alt="Foto 1" onerror="this.parentElement.innerHTML='<div class=\'photo-empty\'><div class=\'ico\'>🌸</div><span>Ganti src<br>dengan foto kamu</span></div>'">
+      <div class="photo-label">Foto 1 💕</div>
+    </div>
+
+    <div class="photo-slot">
+      <img src="./ceac57fa-8d74-4790-b8a7-5de86aaad98a.jpeg" alt="Foto 2" onerror="this.parentElement.innerHTML='<div class=\'photo-empty\'><div class=\'ico\'>💖</div><span>Ganti src<br>dengan foto kamu</span></div>'">
+      <div class="photo-label">Foto 2 💕</div>
+    </div>
+
+    <div class="photo-slot">
+      <img src="./WhatsApp Image 2026-06-29 at 07.06.52 (1).jpeg" alt="Foto 3" onerror="this.parentElement.innerHTML='<div class=\'photo-empty\'><div class=\'ico\'>🥰</div><span>Ganti src<br>dengan foto kamu</span></div>'">
+      <div class="photo-label">Foto 3 💕</div>
+    </div>
+
+    <div class="photo-slot">
+      <img src="./WhatsApp Image 2026-06-29 at 07.06.52.jpeg" alt="Foto 4" onerror="this.parentElement.innerHTML='<div class=\'photo-empty\'><div class=\'ico\'>✨</div><span>Ganti src<br>dengan foto kamu</span></div>'">
+      <div class="photo-label">Foto 4 💕</div>
+    </div>
+
+  </div>
+
+  <!-- ===== VIDEO ===== -->
+  <p class="section-title">IH LUCU YAA KITAA</p>
+
+ 
+  <div class="mx-auto w-full max-w-sm overflow-hidden rounded-2xl bg-black aspect-[9/16]">
+    <video
+        class="h-full w-full object-cover"
+        controls
+        playsinline
+        poster=""
+    >
+        <source src="./WhatsApp Video 2026-06-29 at 07.15.49.mp4" type="video/mp4">
+    </video>
+</div>
+  <p class="love-footer">With all my heart ❤️<br>always & forever 💫</p>
+
+</section>
+
+<script>
+  // Floating hearts
+  const heartBg = document.getElementById('heartBg');
+  const heartEmojis = ['❤️','💕','💗','💖','💝','🌸','✨'];
+  for (let i = 0; i < 18; i++) {
+    const h = document.createElement('div');
+    h.className = 'heart-float';
+    h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.animationDuration = (6 + Math.random() * 8) + 's';
+    h.style.animationDelay = (Math.random() * 8) + 's';
+    h.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+    heartBg.appendChild(h);
+  }
+
+  // Handle video fallback jika src kosong
+  const vid = document.querySelector('video');
+  const src = vid.querySelector('source').getAttribute('src');
+  if (!src || src.trim() === '') {
+    vid.parentElement.innerHTML = `
+      <div class="video-empty">
+        <div class="ico">🎥</div>
+        <span>Ganti src video<br>dengan link video kamu</span>
+      </div>`;
+  }
+
+  // Gift open
+  let opened = false;
+  document.getElementById('giftBox').addEventListener('click', openGift);
+  document.querySelector('.click-hint').addEventListener('click', openGift);
+
+  function openGift() {
+    if (opened) return;
+    opened = true;
+
+    document.getElementById('boxLid').classList.add('lid-open');
+    document.getElementById('bow').classList.add('bow-open');
+
+    // Burst hearts from center screen
+    const burstEmojis = ['❤️','💕','💖','💗','✨','🌸','💝'];
+    for (let i = 0; i < 14; i++) {
+      const h = document.createElement('div');
+      h.className = 'burst-heart';
+      h.textContent = burstEmojis[Math.floor(Math.random() * burstEmojis.length)];
+      const angle = (i / 14) * Math.PI * 2;
+      const dist = 100 + Math.random() * 100;
+      h.style.left = '50vw';
+      h.style.top = '40vh';
+      h.style.setProperty('--tx', `translateX(${Math.cos(angle) * dist}px)`);
+      h.style.setProperty('--ty', `translateY(${Math.sin(angle) * dist}px)`);
+      h.style.animationDelay = (Math.random() * 0.3) + 's';
+      h.style.animationDuration = (0.9 + Math.random() * 0.5) + 's';
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 2000);
+    }
+
+    launchConfetti();
+
+    setTimeout(() => {
+      const gc = document.getElementById('gift-container');
+      gc.style.transition = 'all 0.5s ease';
+      gc.style.opacity = '0';
+      gc.style.transform = 'scale(0.8)';
+      setTimeout(() => {
+        gc.style.display = 'none';
+        const msg = document.getElementById('message-section');
+        msg.style.display = 'block';
+      }, 500);
+    }, 800);
+  }
+
+  function launchConfetti() {
+    const colors = ['#ff4d7d','#ff85a1','#ffd700','#ff1f5e','#ffb3c6','#ffffff','#ffcc00'];
+    for (let i = 0; i < 70; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'confetti-piece';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.top = '-20px';
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.width = (6 + Math.random() * 8) + 'px';
+        c.style.height = (6 + Math.random() * 8) + 'px';
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        c.style.animationDuration = (2 + Math.random() * 2) + 's';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 4000);
+      }, i * 35);
+    }
+  }
+</script>
+</body>
+</html>
